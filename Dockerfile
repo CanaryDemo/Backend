@@ -1,4 +1,4 @@
-FROM rustlang/rust:nightly-slim AS builder
+FROM quay.io/mariusdieckmann/rust:latest AS builder
 
 WORKDIR /app_build
 
