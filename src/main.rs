@@ -38,6 +38,7 @@ struct Color {
 struct Config {
     should_fail: bool,
     load_iterations: i64,
+    startup_delay: u64,
 }
 
 #[derive(Clap)]
@@ -66,7 +67,8 @@ fn main() -> std::io::Result<()> {
 
     let mut config = Config{
         should_fail: false,
-        load_iterations: 10000
+        load_iterations: 10000,
+        startup_delay: 10,
     };
 
     if path.is_file() {
@@ -130,10 +132,10 @@ fn get_health_live(config: State<Config>) -> Status {
 }
 
 #[get("/health/startup")]
-fn get_health_startup(start_time: State<StartTime>) -> Status {
+fn get_health_startup(start_time: State<StartTime>, config: State<Config>) -> Status {
     let duration = start_time.time_started.elapsed();
 
-    if duration.as_secs() < 5 {
+    if duration.as_secs() < config.startup_delay {
         return Status::ServiceUnavailable
     }
 
