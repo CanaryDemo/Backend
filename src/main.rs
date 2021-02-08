@@ -18,12 +18,13 @@ use rocket::request::{self, Request, FromRequest};
 use rocket::Outcome;
 use rocket::http::Status;
 use rocket::State;
+use rocket_contrib::json::{Json};
 
 
 
 use clap::Clap;
 
-const COLORCODE: &str = "green";
+const COLORCODE: &str = "blue";
 
 struct ApiKeyStruct(String);
 struct ApiKey(String);
@@ -115,8 +116,10 @@ fn is_valid(key: &str, original_key: State<ApiKey>) -> bool {
 
 // Returns the defined color
 #[get("/color")]
-fn get_color(_api: ApiKeyStruct) -> Status {
-    return Status::InternalServerError;
+fn get_color(_api: ApiKeyStruct) -> Json<Color> {
+    let color_code = Color{color: COLORCODE.to_string()};
+
+    Json(color_code)
 }
 
 #[get("/health/live")]
